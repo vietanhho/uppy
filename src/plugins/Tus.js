@@ -1,6 +1,7 @@
 const Plugin = require('../core/Plugin')
 const tus = require('tus-js-client')
 const UppySocket = require('../core/UppySocket')
+const Provider = require('../server/Provider')
 const {
   emitSocketProgress,
   getSocketHost,
@@ -225,7 +226,8 @@ module.exports = class Tus extends Plugin {
       }
 
       this.uppy.emit('upload-started', file)
-      file.remote.provider.post(
+      const provider = new Provider(this.uppy, file.remote.providerOptions)
+      provider.post(
         file.remote.url,
         Object.assign({}, file.remote.body, {
           endpoint: opts.endpoint,
